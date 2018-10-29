@@ -37,28 +37,30 @@ def freeze_session(session, keep_var_names=None, output_names=None, clear_device
         return frozen_graph
 
 
-input_fld = '.'
-weight_file = './my_model.h5'
-output_graph_name = 'my_model.pb'
 
-output_fld = input_fld + '/tensorflow_model/'
-if not os.path.isdir(output_fld):
-    os.mkdir(output_fld)
-weight_file_path = osp.join(input_fld, weight_file)
+if __name__ == "__main__":
+    input_fld = '.'
+    weight_file = './my_model.h5'
+    output_graph_name = 'my_model.pb'
 
-K.set_learning_phase(0)
-net_model = load_model(weight_file_path)
+    output_fld = input_fld + '/tensorflow_model/'
+    if not os.path.isdir(output_fld):
+        os.mkdir(output_fld)
+    weight_file_path = osp.join(input_fld, weight_file)
+
+    K.set_learning_phase(0)
+    net_model = load_model(weight_file_path)
 
 
-print('input is :', net_model.input.name)
-print ('output is:', net_model.output.name)
+    print('input is :', net_model.input.name)
+    print ('output is:', net_model.output.name)
 
-sess = K.get_session()
+    sess = K.get_session()
 
-frozen_graph = freeze_session(K.get_session(), output_names=[net_model.output.op.name])
+    frozen_graph = freeze_session(K.get_session(), output_names=[net_model.output.op.name])
 
-from tensorflow.python.framework import graph_io
+    from tensorflow.python.framework import graph_io
 
-graph_io.write_graph(frozen_graph, output_fld, output_graph_name, as_text=False)
+    graph_io.write_graph(frozen_graph, output_fld, output_graph_name, as_text=False)
 
-print('saved the constant graph (ready for inference) at: ', osp.join(output_fld, output_graph_name))
+    print('saved the constant graph (ready for inference) at: ', osp.join(output_fld, output_graph_name))

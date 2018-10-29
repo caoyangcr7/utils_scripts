@@ -1,6 +1,7 @@
 import tensorflow as tf
 from tensorflow.python.framework import graph_util
 
+
 def ckpt2pb(input_checkpoint, output_graph):
     output_node_names = "my_add" # output_node_names
     saver = tf.train.import_meta_graph(input_checkpoint + '.meta', clear_devices=True)
@@ -14,3 +15,7 @@ def ckpt2pb(input_checkpoint, output_graph):
         with tf.gfile.GFile(output_graph, "wb") as f: #保存模型
             f.write(output_graph_def.SerializeToString()) #序列化输出
         print("%d ops in the final graph." % len(output_graph_def.node)) #得到当前图有几个操作节点
+
+
+if __name__  == "__main__":
+    ckpt2pb('./test_file_for_tf/models_ckpt/model.ckpt', './test_file_for_tf/ckpt2pb/test_model.pb')
